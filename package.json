@@ -1,0 +1,38 @@
+{
+  "name": "fyp-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "dev:proxy": "caddy run --config dev/Caddyfile --adapter caddyfile",
+    "test:node": "node --test app/lib/__tests__/location.test.ts app/lib/__tests__/clientToken.test.ts app/lib/__tests__/safeRedirect.test.ts app/lib/__tests__/safeUrl.test.ts app/lib/__tests__/api.test.ts app/lib/__tests__/pendingCreate.test.ts app/lib/__tests__/reconcile.test.ts app/lib/__tests__/authRecovery.test.ts app/lib/__tests__/launchSeen.test.ts app/lib/__tests__/launchRoute.test.ts app/lib/__tests__/nav.test.ts app/lib/__tests__/moProposal.test.ts app/map/__tests__/mapState.test.ts app/map/__tests__/searchOrigin.test.ts app/map/__tests__/deviceLoc.test.ts app/schedule/__tests__/placeLink.test.ts app/schedule/__tests__/addToSchedule.test.ts app/schedule/__tests__/conflictView.test.ts app/lib/__tests__/appearance.test.ts app/schedule/__tests__/eventEnvironment.test.ts app/schedule/__tests__/recurrenceConflictView.test.ts app/schedule/__tests__/taskConflictView.test.ts app/activity/__tests__/searchStatus.test.ts app/map/__tests__/searchThisArea.test.ts app/lib/__tests__/reminders.test.ts app/profile/__tests__/personalDetails.test.ts app/profile/who-am-i/__tests__/interestSelection.test.ts app/lib/__tests__/voiceRecording.test.ts app/lib/__tests__/todayHighlights.test.ts app/schedule/__tests__/planSummary.test.ts"
+  },
+  "dependencies": {
+    "@capacitor/cli": "^8.5.2",
+    "@capacitor/core": "^8.5.2",
+    "@capacitor/ios": "^8.5.2",
+    "leaflet": "^1.9.4",
+    "lucide-react": "^1.28.0",
+    "next": "16.3.4",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "recharts": "^3.10.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/leaflet": "^1.9.20",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.4",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  },
+  "overrides": {
+    "nanoid": "3.3.18"
+  }
+}

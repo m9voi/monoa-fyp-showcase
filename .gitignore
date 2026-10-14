@@ -1,0 +1,89 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env
+.env.*
+!.env.example
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# databases (local data — never commit). The -journal / -wal / -shm sidecars
+# are transient SQLite files that can appear next to the DB mid-transaction.
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+*.sqlite-journal
+*.sqlite3-journal
+/backups/
+
+# runtime logs (backend print output redirected to a file, etc.)
+*.log
+
+# python
+.venv
+.venv*/
+__pycache__/
+*.pyc
+.pytest_cache/
+app/make_ppt.py
+
+# Phase 5A — local TLS material for the HTTPS dev reverse proxy.
+# NEVER commit a private key or certificate. Caddy stores its local CA under
+# %AppData%\Caddy by default (outside this repo); these patterns are defensive
+# in case certs/keys are generated inside the working tree (e.g. via mkcert).
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+/dev/certs/
+/dev/caddy-data/
+/dev/caddy-config/
+caddy_data/
+caddy_config/
+
+# Phase 5J — machine-specific local Caddy config (real LAN IP + mDNS hostname
+# for this PC's own physical-device acceptance testing). Never committed; the
+# generic templated dev/Caddyfile is unaffected.
+/dev/Caddyfile.local
+
+# Claude Code's own local tool/session state for this project — not app source.
+/.claude/

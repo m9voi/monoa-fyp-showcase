@@ -1,0 +1,48 @@
+# CoreOS — Phase 5A local HTTPS reverse proxy (development only).
+#
+# Gives the browser / iPhone ONE trusted HTTPS origin and terminates TLS with
+# Caddy's built-in local CA (`tls internal`) — no mkcert, no public ACME, no
+# cloud dependency. Internal hops to Next.js and FastAPI stay on loopback HTTP
+# because they are not browser-facing.
+#
+#   browser ──HTTPS──> Caddy ─┬─ /api/*  ──> 127.0.0.1:8080  (FastAPI)
+#                             └─ /*       ──> 127.0.0.1:3000  (Next.js: app + HMR)
+#
+# Start order (three terminals, from the repo root):
+#   1. python main.py                     # FastAPI on :8080
+#   2. npm run dev                        # Next.js on :3000
+#   3. npm run dev:proxy                  # this proxy on :443
+#
+# First run only: `caddy trust` (elevated) installs the local CA into the
+# Windows trust store. See docs/secure-development.md.
+{
+	# Local dev only: keep the admin API on loopback, disable public ACME.
+	admin 127.0.0.1:2019
+	auto_https disable_redirects
+}
+
+# Override the hostname with COREOS_DEV_HOST if `coreos.local` is inconvenient
+# on this machine/network. `localhost` is always included for desktop testing.
+{$COREOS_DEV_HOST:coreos.local}, localhost {
+	tls internal
+
+	# API -> FastAPI. The full "/api" prefix is preserved (FastAPI routes live
+	# under /api/*). Method, query string, body and cookies pass through
+	# unchanged; websockets are upgraded automatically.
+	@api path /api/*
+	handle @api {
+		reverse_proxy 127.0.0.1:8080
+	}
+
+	# Everything else -> Next.js (pages, static assets, HMR websocket).
+	handle {
+		reverse_proxy 127.0.0.1:3000
+	}
+
+	encode gzip
+
+	log {
+		output stderr
+		format console
+	}
+}

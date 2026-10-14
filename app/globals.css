@@ -1,0 +1,405 @@
+@import "tailwindcss";
+
+/* =============================================================================
+   MONOA appearance system (B4) — System · Light · Dark
+   -----------------------------------------------------------------------------
+   ONE semantic token layer. Components keep using the app's existing utility
+   vocabulary (text-white*, bg-white/NN, border-white/NN, bg-black, the status
+   families) — those Tailwind color keys are re-pointed at semantic CSS
+   variables in `@theme inline` below, so every screen follows the resolved
+   theme with no per-component `light:` / `dark:` classes.
+
+   Resolution:
+     :root                                   -> LIGHT tokens (the safe default)
+     @media (prefers-color-scheme: dark)
+       :root:not([data-theme="light"])       -> DARK   (System + OS dark)
+     :root[data-theme="dark"]                -> DARK   (explicit)
+     :root[data-theme="light"]              -> LIGHT  (explicit, wins over OS)
+   The pre-hydration script in layout.tsx stamps data-theme before first paint.
+
+   Official MONOA colours: Cream #F8F5EE · Ink #1b2130 · Soft Lavender #e6e6fa ·
+   Mo Blue #99d9e0. The official Mo mark (disc #1b2130 / capsules #99d9e0) is
+   never inverted or recoloured; only the plate *behind* it is app UI and is
+   tokenised (--mo-plate) so the Ink disc stays visible on a dark nav.
+   ========================================================================== */
+
+:root {
+  color-scheme: light;
+
+  /* surfaces */
+  --bg-app: #F8F5EE;          /* MONOA Cream */
+  --surface: #ffffff;         /* elevated card */
+  --surface-2: #f4f1e9;       /* secondary surface (bg-white/5 rides --fg too) */
+  --inset: #ece7db;           /* control / chip surface */
+  --sheet: #ffffff;           /* bottom sheet / modal body */
+  --backdrop: rgba(27, 33, 48, 0.45);   /* scrim — dark in BOTH themes */
+
+  /* foreground scale */
+  --fg: #1b2130;              /* == Tailwind `white` key: primary text / icon */
+  --bg: #F8F5EE;              /* == Tailwind `black` key: strong-button text / page */
+  --text-primary: #1b2130;   /* Ink on Cream ≈ 14.6:1 */
+  --text-secondary: #464c5c; /* ≈ 8.4:1 */
+  --text-muted: #63697a;     /* ≈ 5.1:1 */
+  --text-faint: #8a8f9c;     /* ≈ 3.0:1 — decorative / non-essential only */
+
+  /* lines */
+  --line: #e4dfd2;           /* subtle divider (non-essential) */
+  --line-strong: #868b99;    /* essential component boundary ≈ 3.3:1 on Cream */
+
+  /* strong action */
+  --strong: #1b2130;         /* primary button bg */
+  --strong-fg: #F8F5EE;      /* primary button text ≈ 14.6:1 */
+
+  /* focus */
+  --ring: #1b2130;           /* ≈ 14.6:1 on Cream */
+
+  /* navigation */
+  --nav: #ffffff;
+  --nav-border: #e4dfd2;
+  --nav-active: #1b2130;
+  --mo-plate: #edeefb;       /* pale lavender plate; Ink disc ≈ 12:1 on it */
+
+  /* inputs */
+  --field: #ffffff;
+  --field-border: #7f8593;   /* ≈ 3.6:1 on Cream */
+  --placeholder: #83899a;    /* ≈ 3.4:1 — readable, clearly not real input */
+
+  /* status (text/icon reads on bg;  *-solid pairs with white) */
+  --success: #1f7a4d;        /* ≈ 4.8:1 on Cream */
+  --success-solid: #1f7a4d;
+  --warning: #8a5300;        /* ≈ 5.6:1 on Cream */
+  --danger: #b3261e;         /* ≈ 5.4:1 on Cream */
+  --danger-solid: #b3261e;   /* white on it ≈ 6.4:1 */
+  --danger-fg: #ffffff;
+  --info: #3a49ab;           /* ≈ 6.9:1 on Cream — accent, never body text */
+
+  /* charts (recharts — grid/axis + a categorical series that reads on Cream) */
+  --chart-grid: #e4dfd2;
+  --chart-axis: #63697a;
+  --chart-1: #3a49ab;
+  --chart-2: #1f7a4d;
+  --chart-3: #8a5300;
+  --chart-4: #7c3aed;
+  --chart-5: #b3261e;
+  --chart-6: #0e7490;
+
+  /* decorative brand accents (surfaces only) */
+  --accent-lav: #e6e6fa;     /* Soft Lavender */
+  --accent-blue: #2f8f9d;    /* Mo-Blue-derived, readable as text on Cream */
+
+  /* Today (Figma 226:130) — small icon-chip tints. Decorative containers
+     only; the icon itself always uses --text-primary so it stays readable
+     regardless of chip color. */
+  --tile-wallet-bg: #d1f0f5;
+  --tile-context-bg: #d1e5fa;
+
+  /* Activity (Figma 250:130/443:*) — the 5-color intent-chip palette, reused
+     cyclically to tint the real 10 real sport chips (styling only; chip tint
+     never implies a category grouping the backend doesn't have). Text on
+     every chip always uses --text-primary so it stays readable regardless of
+     tint. --chip-watch-bg intentionally equals --tile-context-bg (same blue). */
+  --chip-move-bg: #d6edd6;
+  --chip-play-bg: #e5dbf7;
+  --chip-goout-bg: #fae0cc;
+  --chip-focus-bg: #f0e5d1;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --bg-app: #0b0d12;
+    --surface: #151922;
+    --surface-2: #1b202b;
+    --inset: #242a37;
+    --sheet: #151922;
+    --backdrop: rgba(0, 0, 0, 0.7);
+
+    --fg: #f4f2ea;           /* near-Cream foreground */
+    --bg: #0b0d12;
+    --text-primary: #f4f2ea; /* ≈ 16:1 on app bg */
+    --text-secondary: #b9bdc9; /* ≈ 10.6:1 */
+    --text-muted: #8b909d;   /* ≈ 5.6:1 */
+    --text-faint: #676c79;   /* ≈ 3.2:1 */
+
+    --line: #242a37;
+    --line-strong: #5f6678;  /* essential component boundary ≈ 3.1:1 on app bg */
+
+    --strong: #f4f2ea;
+    --strong-fg: #14171f;    /* ≈ 15:1 */
+
+    --ring: #99d9e0;         /* Mo Blue — ≈ 9:1 on app bg */
+
+    --nav: #0e1119;
+    --nav-border: #20252f;
+    --nav-active: #f4f2ea;
+    --mo-plate: #2b3242;     /* Ink disc ≈ 1.4:1 — kept visible by the Mo-Blue capsules + a hairline */
+
+    --field: #151922;
+    --field-border: #646b7c; /* ≈ 3.3:1 on field */
+    --placeholder: #83899a;  /* ≈ 3.6:1 on field */
+
+    --success: #4ade80;      /* ≈ 9.5:1 on app bg */
+    --success-solid: #1f7a4d;
+    --warning: #fbbf24;      /* ≈ 11.5:1 */
+    --danger: #f87171;       /* ≈ 6.6:1 */
+    --danger-solid: #dc2626; /* white on it ≈ 4.9:1 */
+    --danger-fg: #ffffff;
+    --info: #93b4ff;         /* ≈ 8:1 — accent */
+
+    --chart-grid: #242a37;
+    --chart-axis: #8b909d;
+    --chart-1: #93b4ff;
+    --chart-2: #4ade80;
+    --chart-3: #fbbf24;
+    --chart-4: #c4b5fd;
+    --chart-5: #f87171;
+    --chart-6: #67e8f9;
+
+    --accent-lav: #3a3d5c;
+    --accent-blue: #99d9e0;
+
+    --tile-wallet-bg: #16323a;
+    --tile-context-bg: #16283f;
+
+    --chip-move-bg: #16321f;
+    --chip-play-bg: #241f3a;
+    --chip-goout-bg: #3a2a18;
+    --chip-focus-bg: #332c1c;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg-app: #0b0d12;
+  --surface: #151922;
+  --surface-2: #1b202b;
+  --inset: #242a37;
+  --sheet: #151922;
+  --backdrop: rgba(0, 0, 0, 0.7);
+
+  --fg: #f4f2ea;
+  --bg: #0b0d12;
+  --text-primary: #f4f2ea;
+  --text-secondary: #b9bdc9;
+  --text-muted: #8b909d;
+  --text-faint: #676c79;
+
+  --line: #242a37;
+  --line-strong: #5f6678;
+
+  --strong: #f4f2ea;
+  --strong-fg: #14171f;
+
+  --ring: #99d9e0;
+
+  --nav: #0e1119;
+  --nav-border: #20252f;
+  --nav-active: #f4f2ea;
+  --mo-plate: #2b3242;
+
+  --field: #151922;
+  --field-border: #646b7c;
+  --placeholder: #83899a;
+
+  --success: #4ade80;
+  --success-solid: #1f7a4d;
+  --warning: #fbbf24;
+  --danger: #f87171;
+  --danger-solid: #dc2626;
+  --danger-fg: #ffffff;
+  --info: #93b4ff;
+
+  --chart-grid: #242a37;
+  --chart-axis: #8b909d;
+  --chart-1: #93b4ff;
+  --chart-2: #4ade80;
+  --chart-3: #fbbf24;
+  --chart-4: #c4b5fd;
+  --chart-5: #f87171;
+  --chart-6: #67e8f9;
+
+  --accent-lav: #3a3d5c;
+  --accent-blue: #99d9e0;
+
+  --tile-wallet-bg: #16323a;
+  --tile-context-bg: #16283f;
+
+  --chip-move-bg: #16321f;
+  --chip-play-bg: #241f3a;
+  --chip-goout-bg: #3a2a18;
+  --chip-focus-bg: #332c1c;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  /* LIGHT tokens are the bare :root defaults; this selector only needs to win
+     over the prefers-color-scheme dark block, which it does by re-asserting
+     color-scheme. All other custom properties inherit from :root unchanged. */
+}
+
+@theme inline {
+  /* Next.js metadata / body */
+  --color-background: var(--bg-app);
+  --color-foreground: var(--text-primary);
+
+  /* --- the app's de-facto token vocabulary, now semantic + theme-aware --- */
+  --color-white: var(--fg);          /* text-white*, bg-white/NN, border-white/NN */
+  --color-black: var(--bg);          /* bg-black, text-black */
+
+  /* status families -> semantic tokens (tints via color-mix keep working) */
+  --color-emerald-200: var(--success);
+  --color-emerald-300: var(--success);
+  --color-emerald-400: var(--success);
+  --color-emerald-500: var(--success-solid);
+  --color-emerald-600: var(--success-solid);
+  --color-green-400: var(--success);
+  --color-green-500: var(--success-solid);
+  --color-amber-200: var(--warning);
+  --color-amber-300: var(--warning);
+  --color-amber-400: var(--warning);
+  --color-amber-500: var(--warning);
+  --color-yellow-400: var(--warning);
+  --color-orange-400: var(--warning);
+  --color-red-300: var(--danger);
+  --color-red-400: var(--danger);
+  --color-red-500: var(--danger-solid);
+  --color-red-600: var(--danger-solid);
+  --color-rose-400: var(--danger);
+  --color-blue-300: var(--info);
+  --color-blue-400: var(--info);
+  --color-blue-500: var(--info);
+  --color-blue-600: var(--info);
+  --color-indigo-400: var(--info);
+  --color-violet-400: var(--info);
+  --color-purple-400: var(--info);
+  --color-purple-500: var(--info);
+  --color-cyan-200: var(--info);
+  --color-cyan-400: var(--info);
+  --color-cyan-500: var(--info);
+  --color-pink-400: var(--info);
+  --color-pink-500: var(--info);
+
+  /* neutral families used ad hoc -> foreground scale / surfaces */
+  --color-slate-100: var(--text-primary);
+  --color-slate-200: var(--text-primary);
+  --color-slate-300: var(--text-secondary);
+  --color-slate-400: var(--text-muted);
+  --color-slate-500: var(--text-muted);
+  --color-slate-900: var(--surface);
+  --color-slate-950: var(--bg-app);
+  --color-zinc-400: var(--text-muted);
+  --color-zinc-500: var(--text-muted);
+  --color-zinc-900: var(--surface);
+  --color-gray-200: var(--inset);
+  --color-neutral-950: var(--bg-app);
+
+  /* --- new explicit semantic utilities (used by migrated code) --- */
+  --color-app: var(--bg-app);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-inset: var(--inset);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-primary: var(--text-primary);
+  --color-secondary: var(--text-secondary);
+  --color-muted: var(--text-muted);
+  --color-faint: var(--text-faint);
+  --color-strong: var(--strong);
+  --color-strong-fg: var(--strong-fg);
+  --color-ring: var(--ring);
+  --color-nav: var(--nav);
+  --color-nav-border: var(--nav-border);
+  --color-nav-active: var(--nav-active);
+  --color-mo-plate: var(--mo-plate);
+  --color-field: var(--field);
+  --color-field-border: var(--field-border);
+  --color-placeholder: var(--placeholder);
+  --color-success: var(--success);
+  --color-success-solid: var(--success-solid);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-danger-solid: var(--danger-solid);
+  --color-danger-fg: var(--danger-fg);
+  --color-info: var(--info);
+  --color-backdrop: var(--backdrop);
+  --color-sheet: var(--sheet);
+  --color-chart-grid: var(--chart-grid);
+  --color-chart-axis: var(--chart-axis);
+  --color-accent-lav: var(--accent-lav);
+  --color-accent-blue: var(--accent-blue);
+  --color-tile-wallet: var(--tile-wallet-bg);
+  --color-tile-context: var(--tile-context-bg);
+  --color-chip-move: var(--chip-move-bg);
+  --color-chip-play: var(--chip-play-bg);
+  --color-chip-goout: var(--chip-goout-bg);
+  --color-chip-watch: var(--tile-context-bg);
+  --color-chip-focus: var(--chip-focus-bg);
+}
+
+body {
+  background: var(--bg-app);
+  color: var(--text-primary);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+::placeholder { color: var(--placeholder); }
+
+/* Hide scrollbars for the premium mobile look */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Primary-navigation "pop" — a one-shot scale on the item that becomes active,
+   translated from the approved Antigravity nav motion. Motion only, not theme. */
+@keyframes monoaNavPop {
+  0% { transform: scale(0.85); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+.monoaNavPop {
+  animation: monoaNavPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@media (prefers-reduced-motion: reduce) {
+  .monoaNavPop { animation: none; }
+}
+
+/* Mo conversation feed — a restrained turn entrance only (Section 19: no
+   flashy animation, ~150–220ms fade/slide where natural). */
+@keyframes moTurnIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.moTurnIn {
+  animation: moTurnIn 180ms ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .moTurnIn { animation: none; }
+}
+
+/* Batch 1A — brand display treatment for PRIMARY page titles only (Plan, Mo,
+   Activity, Map, Wallet, Finance History, Profile, Settings). Reuses the
+   already-loaded Bricolage Grotesque (see app/lib/fonts.ts / layout.tsx's
+   --font-bricolage variable) instead of the app-wide Inter body font, so the
+   page-title scale reads as one consistent MONOA convention instead of the
+   prior ad-hoc text-3xl/2xl/xl split. Sets no color: callers keep applying
+   text-primary so theme (System/Light/Dark) resolution is untouched. Today,
+   Auth and Launch are intentionally not migrated to this class here. */
+.monoaPageTitle {
+  font-family: var(--font-bricolage), "Bricolage Grotesque", sans-serif;
+  font-size: 1.75rem;      /* 28px — between the prior 2xl (24px) and 3xl (30px) */
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+/* Recharts: keep tooltip/labels readable in both themes without per-instance props */
+.recharts-default-tooltip {
+  background: var(--surface) !important;
+  border: 1px solid var(--line-strong) !important;
+  border-radius: 12px !important;
+  color: var(--text-primary) !important;
+}
+.recharts-tooltip-item { color: var(--text-secondary) !important; }
+.recharts-cartesian-axis-tick text { fill: var(--chart-axis); }
+.recharts-cartesian-grid line { stroke: var(--chart-grid); }

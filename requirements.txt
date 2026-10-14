@@ -1,0 +1,44 @@
+# CoreOS backend dependencies (Python 3.14).
+# Generated during Phase 1. Install with:  python -m pip install -r requirements.txt
+
+# --- Web framework ---
+fastapi==0.141.1
+starlette==1.6.0
+uvicorn==0.52.4
+pydantic==2.13.4
+pydantic_core==2.46.4
+anyio==4.14.2
+
+# --- Config / AI ---
+python-dotenv==1.2.3
+openai==3.3.1
+
+# --- Authentication (Phase 2) ---
+argon2-cffi==25.1.0          # Argon2id password hashing
+argon2-cffi-bindings==26.1.0
+cffi==2.1.1
+pycparser==3.0
+email-validator==2.3.0       # RFC-compliant email validation + normalization
+dnspython==2.8.0
+
+# --- Database migrations (Phase 1) ---
+alembic==1.19.1
+SQLAlchemy==2.0.52
+Mako==1.4.1
+MarkupSafe==3.0.3
+
+# --- Background reminder scheduler (Phase 1) ---
+APScheduler==3.11.3
+tzlocal==5.4.4
+
+# --- IANA time-zone database (Phase 5F) ---
+# Required so zoneinfo.ZoneInfo() resolves target-location timezones and applies
+# DST correctly on runtimes without a system tz database (slim containers, some
+# Linux, Windows). weather_core falls back to a fixed offset if this is missing.
+tzdata==2026.3
+
+# --- Testing (Phase 1) ---
+pytest==9.1.1
+httpx==0.28.1
+iniconfig==2.3.0
+pluggy==1.6.0
